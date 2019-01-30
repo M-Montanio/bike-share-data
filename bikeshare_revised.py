@@ -14,40 +14,50 @@ def get_filters():
 
     Returns:
         (str) city - name of city to analyze
-        (str) month - name of month to filter by (Jan-Jun), or "all" to apply no month filter
-        (str) day - name of day to filter (Mon-Sun), or "all" to apply no day filter
+        (str) month - name of month to filter by (Jan-Jun), or "all" to apply no
+                      month filter
+        (str) day - name of day to filter (Mon-Sun), or "all" to apply no day 
+                    filter
     """
     
     # List of valid inputs for cities, months, and days
     VALID_CITIES = ['Chicago', 'New York City', 'Washington']
-    VALID_MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'All']
-    VALID_DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'All']
+    VALID_MONTHS = ['January', 'February', 'March', 'April', 
+                    'May', 'June', 'All']
+    VALID_DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday',
+                  'Saturday', 'Sunday', 'All']
     
     print('\nHello! Let\'s explore some US bikeshare data!')
+    print('\nWhich city would you like to explore: ')
     
     # Prompts user to input a city to explore
-    city = input('\nWhich one of these cities would you like more information on: Chicago, New York City, or Washington? ').title()
+    city = input('Chicago, New York City, or Washington? ').title()
     
     # Checks if city is valid and asks again if not
     while city not in VALID_CITIES:
         print("\nI don't have information on {}.".format(city))
-        city = input('\nWhich one of these cities would you like more information on: Chicago, New York City, or Washington? ').title()
+        print('\nChoose one of the following cities: ')
+        city = input('Chicago, New York City, or Washington? ').title()
     
     # Prompts user to input a month to explore
-    month = input('\nWhich month are you interested in exploring: January, February, March, April, May, June, or all? ').title()
+    print('\nWhich month are you interested in exploring: ')
+    month = input('January, February, March, April, May, June, or all? ').title()
     
     # Checks if month is valid and asks again if not
     while month not in VALID_MONTHS:
         print("\nI don't have any data for {}.".format(month))
-        month = input('\nWhich month are you interested in exploring: January, February, March, April, May, June or all? ').title()
+        print('\nChoose one of the following months: ')
+        month = input('January, February, March, April, May, June or all? ').title()
 
     # Prompts user to input a day to explore    
-    day = input('\nAnd which day of the week are you interested in exploring: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday, or all? ').title()
+    print('\nAnd which day of the week are you interested in exploring: ')
+    day = input('Monday thru Sunday, or all? ').title()
    
     # Checks if day is valid and asks again if not
     while day not in VALID_DAYS:  
         print("\nI don't have any data for {}.".format(day))
-        day = input('\nWhich day of the week are you interested in exploring: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday, or all? ').title()
+        print('\nChoose a day of the week or all: ')
+        day = input('Monday thru Sunday, or all? ').title()
 
     print('-'*40)
     return city, month, day
@@ -60,8 +70,10 @@ def load_data(city, month, day):
 
     Args:
         (str) city - name of the city to analyze
-        (str) month - name of the month to filter by, or "all" to apply no month filter
-        (str) day - name of the day of week to filter by, or "all" to apply no day filter
+        (str) month - name of the month to filter by, or "all" to apply no 
+                      month filter
+        (str) day - name of the day of week to filter by, or "all" to apply 
+                    no day filter
     Returns:
         df - Pandas DataFrame containing city data filtered by month and day
     """
@@ -99,7 +111,7 @@ def time_stats(df):
     # Create a new column that takes starting hour from the Start Time column
     df['hour'] = df['Start Time'].dt.hour
     
-    # Get the number of the month with highest usage and convert number to name of month
+    # Get month with highest usage and convert number to name of month
     most_common_month = df['month'].mode()[0]
     if most_common_month == 1:
         most_common_month = 'January'
@@ -135,12 +147,13 @@ def station_stats(df):
     print('\nCalculating The Most Popular Stations and Trip...\n')
     start_time = time.time()
     
-    # Create a new column that combines start and end station in order to find most common combination
+    # Create a new data frame column that combines start and end station
     df['Station Combination'] = df['Start Station'] + " / " + df['End Station']
     
     print('Most commonly used start station:', df['Start Station'].mode()[0])
     print('Most commonly used end station:', df['End Station'].mode()[0])
-    print('Most commonly used start and end station combination:', df['Station Combination'].mode()[0])
+    print('Most commonly used start and end station combination:', 
+          df['Station Combination'].mode()[0])
 
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
@@ -152,21 +165,27 @@ def trip_duration_stats(df):
     print('\nCalculating Trip Duration Statistics...\n')
     start_time = time.time()
     
-    # Calculate total amount of seconds travelled and convert to hours, minutes, seconds
+    # Calculate total amount of seconds travelled
     total_travel_seconds = df['Trip Duration'].sum()
+    
+    # Convert seconds to hours, minutes, seconds
     convert_total_hours = int(total_travel_seconds // 3600)
     convert_total_minutes = int((total_travel_seconds % 3600) // 60)
     convert_total_seconds = int((total_travel_seconds % 3600) % 60)
   
-    print('Total travel time: {} hours, {} minutes, {} seconds'.format(convert_total_hours, convert_total_minutes, convert_total_seconds))
+    print('Total travel time: {} hours, {} minutes, {} seconds'.format(
+          convert_total_hours, convert_total_minutes, convert_total_seconds))
     
-    # Calculate average travel time in seconds and converts to hours, minutes, seconds
+    # Calculate average travel time in seconds
     ave_travel_seconds = df['Trip Duration'].mean()
+    
+    # Convert to hours,  minutes, seconds
     convert_ave_hours = int(ave_travel_seconds // 3600)
     convert_ave_minutes = int((ave_travel_seconds % 3600) // 60)
     convert_ave_seconds = int((ave_travel_seconds % 3600) % 60)
     
-    print('Mean travel time: {} hours, {} minutes, {} seconds'.format(convert_ave_hours, convert_ave_minutes, convert_ave_seconds))
+    print('Mean travel time: {} hours, {} minutes, {} seconds'.format(
+          convert_ave_hours, convert_ave_minutes, convert_ave_seconds))
 
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
@@ -202,7 +221,7 @@ def descriptive_stats(df):
     """Displays the raw data 5 rows at a time if the user wants to see it."""
     
     # Ask user if they would like to see raw data
-    more_details = input("Would you like to see the first 5 rows of raw data('y' or 'n')?")
+    more_details = input("Do you want to see 5 rows of raw data('y' or 'n')?")
     
     # Asks if user wants to see raw data again if input was invalid
     while more_details != 'y' and more_details != 'n':
@@ -214,7 +233,7 @@ def descriptive_stats(df):
     while more_details == 'y':
             print(df.iloc[index])
             index = index + 5
-            more_details = input("Would you like to see the next 5 rows of raw data('y' or 'n')?")
+            more_details = input("Want to see 5 more rows of raw data('y' or 'n')?")
     
 
 def main():
